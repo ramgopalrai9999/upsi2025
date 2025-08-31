@@ -11,9 +11,13 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
         .app-container {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            flex-grow: 1;
         }
         .quiz-card {
             background-color: rgba(255, 255, 255, 0.95);
@@ -36,65 +40,151 @@
             color: white !important;
             border-color: #dc3545 !important;
         }
+        .review-answer.user-correct {
+             border-left: 5px solid #28a745;
+        }
+        .review-answer.user-incorrect {
+             border-left: 5px solid #dc3545;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
 
     <nav class="bg-white shadow-md w-full sticky top-0 z-10">
         <div class="max-w-6xl mx-auto px-4">
-            <div class="flex items-center justify-center md:justify-start flex-wrap py-2">
-                <a href="#" class="py-2 px-4 text-gray-700 font-semibold hover:text-blue-600 transition duration-300">होम</a>
-                <a href="#" class="py-2 px-4 text-gray-700 font-semibold hover:text-blue-600 transition duration-300">एडमिट कार्ड</a>
-                <a href="#" class="py-2 px-4 text-gray-700 font-semibold hover:text-blue-600 transition duration-300">रिजल्ट</a>
-                <a href="#" class="py-2 px-4 text-gray-700 font-semibold hover:text-blue-600 transition duration-300">नोटिफिकेशन</a>
-                <a href="#" class="py-2 px-4 text-gray-700 font-semibold hover:text-blue-600 transition duration-300">अप्लाई करें</a>
+            <div class="flex justify-between">
+                <div class="flex space-x-4">
+                    <div>
+                        <a href="index.html" class="flex items-center py-4 px-2 text-gray-700 hover:text-gray-900">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v11.494m-5.247-8.247l10.494 0M12 21.747a9.494 9.494 0 100-18.988 9.494 9.494 0 000 18.988z" />
+                            </svg>
+                            <span class="font-bold text-lg">UP SI Quiz</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="index.html" class="py-5 px-3 text-gray-700 hover:text-blue-600 font-semibold">होम</a>
+                    <a href="#" class="py-5 px-3 text-gray-700 hover:text-blue-600 font-semibold">एडमिट कार्ड</a>
+                    <a href="#" class="py-5 px-3 text-gray-700 hover:text-blue-600 font-semibold">रिजल्ट</a>
+                    <a href="about.html" class="py-5 px-3 text-gray-700 hover:text-blue-600 font-semibold">नोटिफिकेशन</a>
+                    <a href="https://www.upprpb.in/#/auth/register" target="_blank" class="py-5 px-3 text-gray-700 hover:text-blue-600 font-semibold">अप्लाई करें</a>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button">
+                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
             </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden">
+            <a href="index.html" class="block py-2 px-4 text-sm hover:bg-gray-100">होम</a>
+            <a href="#" class="block py-2 px-4 text-sm hover:bg-gray-100">एडमिट कार्ड</a>
+            <a href="#" class="block py-2 px-4 text-sm hover:bg-gray-100">रिजल्ट</a>
+            <a href="#" class="block py-2 px-4 text-sm hover:bg-gray-100">नोटिफिकेशन</a>
+            <a href="https://www.upprpb.in/#/auth/register" target="_blank" class="block py-2 px-4 text-sm hover:bg-gray-100">अप्लाई करें</a>
         </div>
     </nav>
 
-    <div class="app-container w-full flex flex-col items-center justify-center p-4 min-h-screen">
+    <div class="app-container w-full flex flex-col items-center justify-center p-4">
         
         <header class="text-center mb-8 mt-8">
              <h1 class="text-white text-4xl md:text-5xl font-bold" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">UP Police SI (दरोगा )</h1>
         </header>
 
         <main class="w-full flex justify-center">
-            <div class="quiz-card w-full max-w-2xl mx-auto rounded-2xl shadow-2xl p-6 md:p-8 text-center relative">
+            <div id="main-card" class="quiz-card w-full max-w-2xl mx-auto rounded-2xl shadow-2xl p-6 md:p-8 text-center relative">
                 <button id="back-btn" class="absolute top-6 left-6 text-gray-600 hover:text-gray-900 font-semibold py-2 px-3 rounded-lg bg-gray-100 hover:bg-gray-200 btn hidden">&larr; होम</button>
                 <h2 id="quiz-title" class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">क्विज़ पोर्टल</h2>
                 <hr class="border-gray-300 w-1/4 mx-auto my-4">
                 
                 <div id="quiz-content" class="hidden">
                      <div id="quiz-header" class="flex justify-between items-center mb-4 gap-4">
-                        <div id="progress-container" class="w-full bg-gray-200 rounded-full h-4">
-                            <div id="progress-bar" class="bg-blue-600 h-4 rounded-full transition-all duration-300" style="width: 0%"></div>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-600"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                            <div id="timer" class="text-xl font-bold text-gray-700">15</div>
+                         <div id="progress-container" class="w-full bg-gray-200 rounded-full h-4">
+                             <div id="progress-bar" class="bg-blue-600 h-4 rounded-full transition-all duration-300" style="width: 0%"></div>
                         </div>
                     </div>
                     <h2 id="question" class="text-xl md:text-2xl font-semibold text-gray-700 my-6 min-h-[60px]">प्रश्न यहाँ दिखेगा</h2>
                     <div id="answer-buttons" class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
-                        <!-- Answer buttons will be generated here -->
-                    </div>
+                        </div>
                     <p id="explanation" class="text-md text-gray-700 mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg hidden text-left"></p>
-                    <div class="flex flex-col md:flex-row-reverse justify-center items-center gap-4 mt-6">
-                        <button id="next-btn" class="w-full md:w-auto bg-blue-600 text-white font-semibold py-3 px-8 rounded-lg btn hover:bg-blue-700 hidden">अगला प्रश्न</button>
+                    <div class="flex justify-between items-center gap-4 mt-6">
+                        <button id="prev-btn" class="w-full md:w-auto bg-gray-500 text-white font-semibold py-3 px-8 rounded-lg btn hover:bg-gray-600">पिछला प्रश्न</button>
+                        <button id="next-btn" class="w-full md:w-auto bg-blue-600 text-white font-semibold py-3 px-8 rounded-lg btn hover:bg-blue-700">अगला प्रश्न</button>
                     </div>
                 </div>
 
                 <div id="start-screen" class="flex flex-col items-center">
                      <p class="text-gray-600 mb-6 text-lg">अपनी पसंद की क्विज़ श्रेणी चुनें!</p>
                      <div id="category-buttons" class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-md">
-                         <!-- Category buttons will be generated here -->
-                     </div>
+                          </div>
                 </div>
+
+                <div id="review-screen" class="hidden text-left">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">उत्तरों की समीक्षा करें</h2>
+                    <div id="review-content" class="space-y-4"></div>
+                     <div class="flex justify-center items-center gap-4 mt-6">
+                         <button id="back-to-score-btn" class="w-full md:w-auto bg-gray-600 text-white font-semibold py-3 px-8 rounded-lg btn hover:bg-gray-700">वापस जाएं</button>
+                    </div>
+                </div>
+
             </div>
         </main>
     </div>
+    
+    <footer class="bg-gray-800 text-white text-center p-4 w-full">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-center items-center space-y-2 md:space-y-0 md:space-x-6">
+                <a href="#" class="hover:text-blue-400 transition">About Us</a>
+                <a href="#" class="hover:text-blue-400 transition">Contact Us</a>
+                <a href="Privacy Policy.html" class="hover:text-blue-400 transition">Privacy Policy</a>
+            </div>
+            <p class="mt-4 text-sm text-gray-400">&copy; 2024 UP SI Quiz. All Rights Reserved.</p>
+        </div>
+    </footer>
+
 
     <script>
+        // --- SOUND EFFECTS ---
+        let audioContext;
+        try {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        } catch (e) {
+            console.error("Web Audio API is not supported in this browser");
+        }
+
+        function playSound(type) {
+            if (!audioContext) return;
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.01);
+
+            if (type === 'correct') {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+            } else if (type === 'incorrect') {
+                oscillator.type = 'square';
+                oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+            }
+            
+            oscillator.start(audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + 0.2);
+            oscillator.stop(audioContext.currentTime + 0.2);
+        }
+        
+        // --- MOBILE MENU ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // --- QUIZ DATA ---
         const quizData = {
             "सामान्य ज्ञान": [
                 {
@@ -161,7 +251,7 @@
                 }
             ],
             "पॉलिटी": [
-                {
+                 {
                     question: "भारतीय संविधान के जनक किसे कहा जाता है?",
                     answers: [
                         { text: "जवाहरलाल नेहरू", correct: false },
@@ -210,156 +300,6 @@
                         { text: "52वां संशोधन", correct: false }
                     ],
                     explanation: "'धर्मनिरपेक्ष', 'समाजवादी' और 'अखंडता' शब्द 1976 में 42वें संविधान संशोधन द्वारा प्रस्तावना में जोड़े गए थे।"
-                },
-                {
-                    question: "भारत के प्रथम राष्ट्रपति कौन थे?",
-                    answers: [
-                        { text: "बी. आर. अंबेडकर", correct: false },
-                        { text: "राजेंद्र प्रसाद", correct: true },
-                        { text: "एस. राधाकृष्णन", correct: false },
-                        { text: "वी.वी. गिरि", correct: false }
-                    ],
-                    explanation: "डॉ. राजेंद्र प्रसाद भारत के पहले राष्ट्रपति थे, जिन्होंने 1950 से 1962 तक सेवा की।"
-                },
-                {
-                    question: "दल-बदल विरोधी कानून (Anti-defection Law) संविधान की किस अनुसूची में ਹੈ?",
-                    answers: [
-                        { text: "आठवीं अनुसूची", correct: false },
-                        { text: "नौवीं अनुसूची", correct: false },
-                        { text: "दसवीं अनुसूची", correct: true },
-                        { text: "बारहवीं अनुसूची", correct: false }
-                    ],
-                    explanation: "दल-बदल विरोधी कानून को 1985 में 52वें संशोधन के माध्यम से दसवीं अनुसूची में जोड़ा गया था।"
-                },
-                {
-                    question: "संविधान में मौलिक कर्तव्यों की संख्या कितनी है?",
-                    answers: [
-                        { text: "9", correct: false },
-                        { text: "10", correct: false },
-                        { text: "11", correct: true },
-                        { text: "12", correct: false }
-                    ],
-                    explanation: "प्रारंभ में 10 मौलिक कर्तव्य थे, 86वें संशोधन (2002) के बाद 11वां कर्तव्य जोड़ा गया।"
-                },
-                {
-                    question: "संविधान में समवर्ती सूची (Concurrent List) का विचार कहाँ से लिया गया है?",
-                    answers: [
-                        { text: "अमेरिका", correct: false },
-                        { text: "ऑस्ट्रेलिया", correct: true },
-                        { text: "कनाडा", correct: false },
-                        { text: "आयरलैंड", correct: false }
-                    ],
-                    explanation: "समवर्ती सूची की अवधारणा ऑस्ट्रेलिया के संविधान से ली गई है, जिसमें केंद्र और राज्य दोनों कानून बना सकते हैं।"
-                },
-                {
-                    question: "भारत के मुख्य चुनाव आयुक्त की नियुक्ति कौन करता है?",
-                    answers: [
-                        { text: "प्रधानमंत्री", correct: false },
-                        { text: "राष्ट्रपति", correct: true },
-                        { text: "संसद", correct: false },
-                        { text: "सुप्रीम कोर्ट", correct: false }
-                    ],
-                    explanation: "भारत के मुख्य चुनाव आयुक्त और अन्य चुनाव आयुक्तों की नियुक्ति भारत के राष्ट्रपति द्वारा की जाती है।"
-                },
-                {
-                    question: "राष्ट्रपति के महाभियोग की प्रक्रिया किस अनुच्छेद में है?",
-                    answers: [
-                        { text: "अनुच्छेद 56", correct: false },
-                        { text: "अनुच्छेद 61", correct: true },
-                        { text: "अनुच्छेद 72", correct: false },
-                        { text: "अनुच्छेद 78", correct: false }
-                    ],
-                    explanation: "संविधान के अनुच्छेद 61 में राष्ट्रपति पर महाभियोग चलाने की प्रक्रिया का वर्णन है।"
-                },
-                {
-                    question: "भारतीय संविधान का संरक्षक किसे कहा जाता है?",
-                    answers: [
-                        { text: "प्रधानमंत्री", correct: false },
-                        { text: "राष्ट्रपति", correct: false },
-                        { text: "सर्वोच्च न्यायालय", correct: true },
-                        { text: "संसद", correct: false }
-                    ],
-                    explanation: "सर्वोच्च न्यायालय को संविधान का संरक्षक और मौलिक अधिकारों का गारंटर माना जाता है।"
-                },
-                {
-                    question: "भारत में न्यायिक पुनरावलोकन (Judicial Review) की अवधारणा किस देश से ली गई है?",
-                    answers: [
-                        { text: "ब्रिटेन", correct: false },
-                        { text: "अमेरिका", correct: true },
-                        { text: "कनाडा", correct: false },
-                        { text: "फ्रांस", correct: false }
-                    ],
-                    explanation: "न्यायिक पुनरावलोकन की शक्ति, जो सर्वोच्च न्यायालय को कानूनों की संवैधानिकता की जांच करने की अनुमति देती है, अमेरिकी संविधान से ली गई है।"
-                },
-                {
-                    question: "संघ लोक सेवा आयोग (UPSC) संविधान के किस भाग में वर्णित है?",
-                    answers: [
-                        { text: "भाग XIII", correct: false },
-                        { text: "भाग XIV", correct: true },
-                        { text: "भाग XV", correct: false },
-                        { text: "भाग XVI", correct: false }
-                    ],
-                    explanation: "संघ और राज्यों के अधीन सेवाएं संविधान के भाग XIV में वर्णित हैं, जिसमें UPSC भी शामिल है।"
-                },
-                {
-                    question: "संविधान में आपातकालीन प्रावधान किस देश से लिए गए हैं?",
-                    answers: [
-                        { text: "जर्मनी (वाइमर संविधान)", correct: true },
-                        { text: "अमेरिका", correct: false },
-                        { text: "कनाडा", correct: false },
-                        { text: "ब्रिटेन", correct: false }
-                    ],
-                    explanation: "आपातकाल के दौरान मौलिक अधिकारों के निलंबन जैसे प्रावधान जर्मनी के वाइमर संविधान से लिए गए हैं।"
-                },
-                {
-                    question: "संसद के दो सत्रों के बीच अधिकतम अंतर कितने महीने से अधिक नहीं होना चाहिए?",
-                    answers: [
-                        { text: "3 महीने", correct: false },
-                        { text: "4 महीने", correct: false },
-                        { text: "6 महीने", correct: true },
-                        { text: "9 महीने", correct: false }
-                    ],
-                    explanation: "संविधान के अनुसार, संसद के दो सत्रों के बीच छह महीने से अधिक का अंतराल नहीं हो सकता है।"
-                },
-                {
-                    question: "अस्पृश्यता का अंत किस अनुच्छेद में किया गया है?",
-                    answers: [
-                        { text: "अनुच्छेद 15", correct: false },
-                        { text: "अनुच्छेद 16", correct: false },
-                        { text: "अनुच्छेद 17", correct: true },
-                        { text: "अनुच्छेद 18", correct: false }
-                    ],
-                    explanation: "अनुच्छेद 17 अस्पृश्यता को समाप्त करता है और किसी भी रूप में इसके अभ्यास को प्रतिबंधित करता है।"
-                },
-                {
-                    question: "निम्न में से कौन-सा मौलिक अधिकार नहीं है?",
-                    answers: [
-                        { text: "समानता का अधिकार", correct: false },
-                        { text: "स्वतंत्रता का अधिकार", correct: false },
-                        { text: "संपत्ति का अधिकार", correct: true },
-                        { text: "संवैधानिक उपचार का अधिकार", correct: false }
-                    ],
-                    explanation: "संपत्ति के अधिकार को 44वें संशोधन (1978) द्वारा मौलिक अधिकारों की सूची से हटाकर एक कानूनी अधिकार बना दिया गया था।"
-                },
-                {
-                    question: "वर्तमान में संविधान में कुल कितनी अनुसूचियाँ (Schedules) हैं?",
-                    answers: [
-                        { text: "10", correct: false },
-                        { text: "11", correct: false },
-                        { text: "12", correct: true },
-                        { text: "14", correct: false }
-                    ],
-                    explanation: "भारतीय संविधान में वर्तमान में 12 अनुसूचियाँ हैं। मूल रूप से इसमें 8 थीं।"
-                },
-                {
-                    question: "लोकसभा को भंग करने का अधिकार किसके पास है?",
-                    answers: [
-                        { text: "प्रधानमंत्री", correct: false },
-                        { text: "राष्ट्रपति", correct: true },
-                        { text: "लोकसभा अध्यक्ष", correct: false },
-                        { text: "भारत के मुख्य न्यायाधीश", correct: false }
-                    ],
-                    explanation: "राष्ट्रपति प्रधानमंत्री की सलाह पर लोकसभा को भंग कर सकते हैं।"
                 }
             ],
             "हिन्दी": [
@@ -372,100 +312,10 @@
                     question: "हिन्दी वर्णमाला में कितने स्वर होते हैं?",
                     answers: [ { text: "10", correct: false }, { text: "11", correct: true }, { text: "12", correct: false }, { text: "13", correct: false } ],
                     explanation: "हिन्दी वर्णमाला में परंपरागत रूप से 11 स्वर माने जाते हैं (अ, आ, इ, ई, उ, ऊ, ऋ, ए, ऐ, ओ, औ)।"
-                },
-                {
-                    question: "'कबीर के दोहे' किस भाषा में लिखे गए हैं?",
-                    answers: [ { text: "अवधी", correct: false }, { text: "ब्रजभाषा", correct: false }, { text: "सधुक्कड़ी", correct: true }, { text: "खड़ी बोली", correct: false } ],
-                    explanation: "कबीर की भाषा को 'सधुक्कड़ी' या 'पंचमेल खिचड़ी' कहा जाता है, जिसमें कई भाषाओं के शब्द मिश्रित हैं।"
-                },
-                {
-                    question: "भारत की राजभाषा क्या है?",
-                    answers: [ { text: "अंग्रेजी", correct: false }, { text: "संस्कृत", correct: false }, { text: "हिन्दी", correct: true }, { text: "तमिल", correct: false } ],
-                    explanation: "संविधान के अनुच्छेद 343(1) के अनुसार, देवनागरी लिपि में हिन्दी संघ की राजभाषा है।"
-                },
-                {
-                    question: "'गबन' उपन्यास के लेखक कौन हैं?",
-                    answers: [ { text: "जयशंकर प्रसाद", correct: false }, { text: "प्रेमचंद", correct: true }, { text: "महादेवी वर्मा", correct: false }, { text: "निराला", correct: false } ],
-                    explanation: "'गबन', 'गोदान', 'निर्मला' जैसे प्रसिद्ध उपन्यास मुंशी प्रेमचंद द्वारा लिखे गए हैं।"
-                },
-                {
-                    question: "'य, र, ल, व' किस प्रकार के व्यंजन हैं?",
-                    answers: [ { text: "स्पर्श व्यंजन", correct: false }, { text: "ऊष्म व्यंजन", correct: false }, { text: "अंतःस्थ व्यंजन", correct: true }, { text: "संयुक्त व्यंजन", correct: false } ],
-                    explanation: "ये व्यंजन स्वर और व्यंजन के बीच स्थित होते हैं, इसलिए इन्हें अंतःस्थ व्यंजन कहा जाता है।"
-                },
-                {
-                    question: "'कामायनी' महाकाव्य किसने लिखा है?",
-                    answers: [ { text: "सुमित्रानंदन पंत", correct: false }, { text: "सूर्यकांत त्रिपाठी 'निराला'", correct: false }, { text: "जयशंकर प्रसाद", correct: true }, { text: "मैथिलीशरण गुप्त", correct: false } ],
-                    explanation: "'कामायनी' आधुनिक छायावादी युग का सर्वश्रेष्ठ महाकाव्य है, जिसकी रचना जयशंकर प्रसाद ने की है।"
-                },
-                {
-                    question: "हिन्दी दिवस कब मनाया जाता है?",
-                    answers: [ { text: "14 अक्टूबर", correct: false }, { text: "14 सितंबर", correct: true }, { text: "15 अगस्त", correct: false }, { text: "26 जनवरी", correct: false } ],
-                    explanation: "14 सितंबर 1949 को संविधान सभा ने हिन्दी को भारत की राजभाषा का दर्जा दिया था, इसीलिए इस दिन हिन्दी दिवस मनाया जाता है।"
-                },
-                {
-                    question: "'अंधेर नगरी' नाटक के रचयिता कौन हैं?",
-                    answers: [ { text: "मोहन राकेश", correct: false }, { text: "भारतेंदु हरिश्चंद्र", correct: true }, { text: "जयशंकर प्रसाद", correct: false }, { text: "धर्मवीर भारती", correct: false } ],
-                    explanation: "'अंधेर नगरी चौपट राजा' एक प्रसिद्ध व्यंग्यात्मक नाटक है जिसे भारतेंदु हरिश्चंद्र ने लिखा है।"
-                },
-                {
-                    question: "'जिसकी लाठी उसकी भैंस' क्या है?",
-                    answers: [ { text: "मुहावरा", correct: false }, { text: "लोकोक्ति", correct: true }, { text: "कहावत", correct: false }, { text: "वाक्य", correct: false } ],
-                    explanation: "यह एक लोकोक्ति है, जिसका अर्थ है 'शक्तिशाली की ही जीत होती है'।"
-                },
-                {
-                    question: "'मधुशाला' किसकी कृति है?",
-                    answers: [ { text: "हरिवंश राय बच्चन", correct: true }, { text: "माखनलाल चतुर्वेदी", correct: false }, { text: "रामधारी सिंह 'दिनकर'", correct: false }, { text: "सोहनलाल द्विवेदी", correct: false } ],
-                    explanation: "'मधुशाला' हिन्दी के प्रसिद्ध कवि और लेखक हरिवंश राय बच्चन की एक अत्यंत प्रसिद्ध कृति है।"
-                },
-                {
-                    question: "'भाषा' की सबसे छोटी इकाई क्या है?",
-                    answers: [ { text: "शब्द", correct: false }, { text: "अक्षर", correct: false }, { text: "वर्ण", correct: true }, { text: "वाक्य", correct: false } ],
-                    explanation: "वर्ण या ध्वनि भाषा की सबसे छोटी इकाई होती है जिसके और टुकड़े नहीं किए जा सकते।"
-                },
-                {
-                    question: "'पद्मावत' की रचना किसने की?",
-                    answers: [ { text: "अमीर खुसरो", correct: false }, { text: "मलिक मुहम्मद जायसी", correct: true }, { text: "अब्दुल रहीम खान-ए-खाना", correct: false }, { text: "रसखान", correct: false } ],
-                    explanation: "'पद्मावत' एक महाकाव्य है जिसकी रचना मलिक मुहम्मद जायसी ने अवधी भाषा में की थी।"
-                },
-                {
-                    question: "'मैं', 'तुम', 'वह' - ये शब्द क्या कहलाते हैं?",
-                    answers: [ { text: "संज्ञा", correct: false }, { text: "सर्वनाम", correct: true }, { text: "विशेषण", correct: false }, { text: "क्रिया", correct: false } ],
-                    explanation: "जो शब्द संज्ञा के स्थान पर प्रयोग किए जाते हैं, उन्हें सर्वनाम कहते हैं।"
-                },
-                {
-                    question: "'राष्ट्रकवि' की उपाधि किसे दी गई है?",
-                    answers: [ { text: "जयशंकर प्रसाद", correct: false }, { text: "सुभद्रा कुमारी चौहान", correct: false }, { text: "मैथिलीशरण गुप्त", correct: true }, { text: "रामधारी सिंह 'दिनकर'", correct: false } ],
-                    explanation: "महात्मा गांधी ने मैथिलीशरण गुप्त को उनकी रचना 'भारत-भारती' के लिए 'राष्ट्रकवि' की उपाधि दी थी।"
-                },
-                {
-                    question: "'संधि' के कितने भेद होते हैं?",
-                    answers: [ { text: "दो", correct: false }, { text: "तीन", correct: true }, { text: "चार", correct: false }, { text: "पाँच", correct: false } ],
-                    explanation: "संधि के तीन मुख्य भेद होते हैं - स्वर संधि, व्यंजन संधि और विसर्ग संधि।"
-                },
-                {
-                    question: "'भारत दुर्दशा' के लेखक कौन हैं?",
-                    answers: [ { text: "भारतेंदु हरिश्चंद्र", correct: true }, { text: "प्रेमचंद", correct: false }, { text: "हजारी प्रसाद द्विवेदी", correct: false }, { text: "बालकृष्ण भट्ट", correct: false } ],
-                    explanation: "'भारत दुर्दशा' भारतेन्दु हरिश्चन्द्र द्वारा रचित एक प्रसिद्ध नाटक है जिसमें भारत की तत्कालीन स्थिति का चित्रण किया गया है।"
-                },
-                {
-                    question: "'अलंकार' का शाब्दिक अर्थ क्या होता है?",
-                    answers: [ { text: "वस्त्र", correct: false }, { text: "सौंदर्य", correct: false }, { text: "आभूषण", correct: true }, { text: "प्रकाश", correct: false } ],
-                    explanation: "जिस प्रकार आभूषण शरीर की शोभा बढ़ाते हैं, उसी प्रकार अलंकार काव्य की शोभा बढ़ाते हैं।"
-                },
-                {
-                    question: "'पंच परमेश्वर' कहानी किसने लिखी है?",
-                    answers: [ { text: "यशपाल", correct: false }, { text: "भगवती चरण वर्मा", correct: false }, { text: "मुंशी प्रेमचंद", correct: true }, { text: "फणीश्वर नाथ 'रेणु'", correct: false } ],
-                    explanation: "'पंच परमेश्वर' मुंशी प्रेमचंद की प्रसिद्ध कहानियों में से एक है जो न्याय और मित्रता के द्वंद्व को दर्शाती है।"
-                },
-                {
-                    question: "'वीर रस' का स्थायी भाव क्या है?",
-                    answers: [ { text: "क्रोध", correct: false }, { text: "भय", correct: false }, { text: "शोक", correct: false }, { text: "उत्साह", correct: true } ],
-                    explanation: "वीर रस का स्थायी भाव 'उत्साह' है, जो वीरतापूर्ण कार्यों को करने के लिए प्रेरित करता है।"
                 }
             ],
             "UPSI 2021": [
-                {
+                 {
                     question: "देवरदा का जन्म कहाँ हुआ था?",
                     answers: [
                         { text: "अौरैया", correct: true },
@@ -484,112 +334,60 @@
                         { text: "अपूर्ण भूतकाल", correct: false }
                     ],
                     explanation: "क्रिया के जिस रूप से काम के सामान्य रूप से बीते समय में पूरा होने का बोध हो, उसे सामान्य भूतकाल कहते हैं।"
+                }
+            ],
+            "Indian History": [
+                {
+                    question: "सिंधु घाटी सभ्यता का सबसे महत्वपूर्ण स्थल कौन सा था?",
+                    answers: [
+                        { text: "हड़प्पा", correct: false },
+                        { text: "मोहनजोदड़ो", correct: true },
+                        { text: "लोथल", correct: false },
+                        { text: "कालीबंगन", correct: false }
+                    ],
+                    explanation: "मोहनजोदड़ो, जिसे 'मृतकों का टीला' भी कहा जाता है, अपने विशाल स्नानागार और सुनियोजित शहरी योजना के लिए जाना जाता है।"
                 },
                 {
-                    question: "'राम बहुत बहादुर है।' इस वाक्य में कौन-सा शब्द विशेष्य है?",
+                    question: "मौर्य साम्राज्य की स्थापना किसने की?",
                     answers: [
-                        { text: "है", correct: false },
-                        { text: "राम", correct: true },
-                        { text: "बहुत", correct: false },
-                        { text: "बहादुर", correct: false }
+                        { text: "अशोक", correct: false },
+                        { text: "बिंदुसार", correct: false },
+                        { text: "चंद्रगुप्त मौर्य", correct: true },
+                        { text: "बृहद्रथ", correct: false }
                     ],
-                    explanation: "जिस संज्ञा या सर्वनाम शब्द की विशेषता बताई जाती है, उसे विशेष्य कहते हैं। यहाँ 'राम' की विशेषता बताई जा रही है।"
-                },
-                {
-                    question: "हिन्दी साहित्य के इतिहास में काल विभाजन का सर्वप्रथम प्रयास किसने किया था?",
-                    answers: [
-                        { text: "रामचन्द्र शुक्ल", correct: false },
-                        { text: "डॉ. श्यामसुंदर दास", correct: false },
-                        { text: "जॉर्ज ग्रियर्सन", correct: true },
-                        { text: "गार्सां दे तासी", correct: false }
-                    ],
-                    explanation: "हिन्दी साहित्य के काल विभाजन का सर्वप्रथम प्रयास जॉर्ज ग्रियर्सन ने किया था।"
-                },
-                {
-                    question: "'गर्दन पर सवार होना' मुहावरे का अर्थ है–",
-                    answers: [
-                        { text: "गर्दन पर बैठ जाना", correct: false },
-                        { text: "पीछा न छोड़ना", correct: true },
-                        { text: "जान से मार डालना", correct: false },
-                        { text: "गर्दन दबाना", correct: false }
-                    ],
-                    explanation: "इस मुहावरे का सही अर्थ है किसी के पीछे पड़ जाना या पीछा न छोड़ना।"
-                },
-                {
-                    question: "रोला छन्द में कितनी मात्राएँ होती हैं?",
-                    answers: [
-                        { text: "28", correct: false },
-                        { text: "16", correct: false },
-                        { text: "26", correct: false },
-                        { text: "24", correct: true }
-                    ],
-                    explanation: "रोला एक सम मात्रिक छन्द है। इसके प्रत्येक चरण में 24 मात्राएँ होती हैं।"
-                },
-                {
-                    question: "इनमें से कौन-सी बोली 'आकार' बहुला है?",
-                    answers: [
-                        { text: "अङ्गिका", correct: false },
-                        { text: "गढ़वाली", correct: false },
-                        { text: "कौरवी", correct: true },
-                        { text: "भोजपुरी", correct: false }
-                    ],
-                    explanation: "कौरवी (खड़ी बोली) आकार-बहुला बोली है, जबकि ब्रजभाषा ओकार-बहुला है।"
-                },
-                {
-                    question: "इनमें से किस वाक्य में 'क्रियार्थक संज्ञा' का प्रयोग है?",
-                    answers: [
-                        { text: "टहलना स्वास्थ्य के लिए अच्छा है", correct: true },
-                        { text: "मैं खाकर सोऊँगा", correct: false },
-                        { text: "राधा बहुत तुतलाती है", correct: false },
-                        { text: "गुर्जरों ने लड़ाई लड़ी", correct: false }
-                    ],
-                    explanation: "जब कोई क्रिया संज्ञा की तरह वाक्य में प्रयोग होती है, तो उसे क्रियार्थक संज्ञा कहते हैं। यहाँ 'टहलना' एक क्रियार्थक संज्ञा है।"
-                },
-                {
-                    question: "उपमा अलंकार के सर्वाधिक प्रयोग के लिए इनमें से कौन-से कवि अधिक प्रसिद्ध हैं?",
-                    answers: [
-                        { text: "माघ", correct: false },
-                        { text: "कालिदास", correct: true },
-                        { text: "वाल्मीकि", correct: false },
-                        { text: "भास", correct: false }
-                    ],
-                    explanation: "संस्कृत साहित्य में 'उपमा कालिदासस्य' उक्ति प्रसिद्ध है, अर्थात कालिदास उपमा अलंकार के सर्वश्रेष्ठ प्रयोग के लिए जाने जाते हैं।"
-                },
-                {
-                    question: "इनमें से कौन-सी बोली 'पश्चिमी हिन्दी' की बोली है?",
-                    answers: [
-                        { text: "कौरवी", correct: false },
-                        { text: "कन्नौजी", correct: false },
-                        { text: "बुंदेली", correct: false },
-                        { text: "ये सभी", correct: true }
-                    ],
-                    explanation: "पश्चिमी हिन्दी के अंतर्गत पाँच बोलियाँ आती हैं: खड़ी बोली (कौरवी), ब्रजभाषा, हरियाणवी (बाँगरू), बुंदेली और कन्नौजी।"
+                    explanation: "चंद्रगुप्त मौर्य ने 322 ईसा पूर्व में चाणक्य की मदद से नंद वंश को हराकर मौर्य साम्राज्य की स्थापना की।"
                 }
             ]
         };
 
+        // --- DOM ELEMENTS ---
         const startScreen = document.getElementById('start-screen');
         const categoryButtonsContainer = document.getElementById('category-buttons');
         const quizContent = document.getElementById('quiz-content');
         const questionElement = document.getElementById('question');
         const answerButtons = document.getElementById('answer-buttons');
         const nextButton = document.getElementById('next-btn');
+        const prevButton = document.getElementById('prev-btn');
         const backButton = document.getElementById('back-btn');
         const quizTitle = document.getElementById('quiz-title');
         const progressBar = document.getElementById('progress-bar');
-        const timerElement = document.getElementById('timer');
         const explanationElement = document.getElementById('explanation');
+        const mainCard = document.getElementById('main-card');
+        const reviewScreen = document.getElementById('review-screen');
+        const reviewContent = document.getElementById('review-content');
+        const backToScoreBtn = document.getElementById('back-to-score-btn');
         
+        // --- STATE VARIABLES ---
         let questions = [];
         let currentQuestionIndex = 0;
         let score = 0;
-        let timer;
-        let timeLeft = 15;
+        let userAnswers = [];
+        let currentCategory = '';
 
+        // --- FUNCTIONS ---
         function setupCategories() {
             categoryButtonsContainer.innerHTML = '';
-            // Ensure consistent order of categories
-            const categories = ["सामान्य ज्ञान", "विज्ञान", "पॉलिटी", "हिन्दी", "UPSI 2021"];
+            const categories = ["सामान्य ज्ञान", "विज्ञान", "पॉलिटी", "हिन्दी", "UPSI 2021", "Indian History"];
             categories.forEach(category => {
                  if (quizData[category]) {
                     const button = document.createElement('button');
@@ -602,18 +400,21 @@
         }
 
         function startQuiz(category) {
+            currentCategory = category;
             let questionsFromCategory = [...quizData[category]];
             shuffleArray(questionsFromCategory);
             questions = questionsFromCategory;
             
-            document.getElementById('quiz-header').style.display = 'flex';
             quizTitle.innerText = `${category} क्विज़`;
             startScreen.style.display = 'none';
+            reviewScreen.style.display = 'none';
             quizContent.style.display = 'block';
             backButton.style.display = 'block';
+            
             currentQuestionIndex = 0;
             score = 0;
-            nextButton.innerHTML = "अगला प्रश्न";
+            userAnswers = new Array(questions.length).fill(null);
+            
             showQuestion();
         }
 
@@ -630,75 +431,101 @@
             let questionNo = currentQuestionIndex + 1;
             questionElement.innerHTML = questionNo + ". " + currentQuestion.question;
 
+            const isAnswered = userAnswers[currentQuestionIndex] !== null;
+
             currentQuestion.answers.forEach(answer => {
                 const button = document.createElement("button");
                 button.innerHTML = answer.text;
                 button.classList.add('w-full', 'text-center', 'p-4', 'border', 'border-gray-300', 'rounded-lg', 'text-gray-700', 'bg-white', 'hover:bg-gray-100', 'btn', 'text-lg');
                 answerButtons.appendChild(button);
+                
                 if (answer.correct) {
-                    button.dataset.correct = answer.correct;
+                    button.dataset.correct = "true";
                 }
-                button.addEventListener("click", selectAnswer);
+
+                if (isAnswered) {
+                    button.disabled = true;
+                    if (button.dataset.correct === "true") {
+                        button.classList.add("correct");
+                    }
+                    if (button.innerText === userAnswers[currentQuestionIndex] && !answer.correct) {
+                        button.classList.add("incorrect");
+                    }
+                } else {
+                    button.addEventListener("click", selectAnswer);
+                }
             });
+
+            if (isAnswered) {
+                explanationElement.innerText = currentQuestion.explanation;
+                explanationElement.style.display = "block";
+            }
+
             updateProgressBar();
-            startTimer();
+            updateNavigationButtons();
         }
-
-        function startTimer(){
-            timeLeft = 15;
-            timerElement.innerText = timeLeft;
-            timer = setInterval(() => {
-                timeLeft--;
-                timerElement.innerText = timeLeft;
-                if(timeLeft <= 0){
-                    clearInterval(timer);
-                    handleNextQuestion();
-                }
-            }, 1000);
-        }
-
+        
         function resetState() {
-            clearInterval(timer);
             explanationElement.style.display = "none";
-            nextButton.style.display = "none";
             while (answerButtons.firstChild) {
                 answerButtons.removeChild(answerButtons.firstChild);
             }
         }
-
+        
         function selectAnswer(e) {
-            clearInterval(timer);
             const selectedBtn = e.target;
             const isCorrect = selectedBtn.dataset.correct === "true";
+
             if (isCorrect) {
-                selectedBtn.classList.add("correct");
+                playSound('correct');
                 score++;
             } else {
+                playSound('incorrect');
                 selectedBtn.classList.add("incorrect");
             }
+
+            userAnswers[currentQuestionIndex] = selectedBtn.innerText;
+            
             Array.from(answerButtons.children).forEach(button => {
                 if (button.dataset.correct === "true") {
                     button.classList.add("correct");
                 }
                 button.disabled = true;
             });
+            
             explanationElement.innerText = questions[currentQuestionIndex].explanation;
             explanationElement.style.display = "block";
-            nextButton.style.display = "block";
         }
-        
+
         function handleNextQuestion() {
-            currentQuestionIndex++;
-            if (currentQuestionIndex < questions.length) {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
                 showQuestion();
             } else {
                 showScore();
             }
         }
         
+        function handlePrevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                showQuestion();
+            }
+        }
+
+        function updateNavigationButtons() {
+            prevButton.style.display = currentQuestionIndex === 0 ? 'none' : 'block';
+            if (currentQuestionIndex === questions.length - 1) {
+                nextButton.innerText = "स्कोर देखें";
+            } else {
+                nextButton.innerText = "अगला प्रश्न";
+            }
+        }
+
         function showScore() {
-            resetState();
-            document.getElementById('quiz-header').style.display = 'none';
+            quizContent.style.display = 'none';
+            reviewScreen.style.display = 'none';
+
             const percentage = Math.round((score / questions.length) * 100);
             let remark = "";
             let remarkColor = "";
@@ -713,20 +540,72 @@
                 remark = "और प्रैक्टिस करो";
                 remarkColor = "text-red-600";
             }
+            
+            const shareText = encodeURIComponent(`मैंने UP Police SI क्विज़ में ${questions.length} में से ${score} अंक (${percentage}%) प्राप्त किए! आप भी চেষ্টা करें।`);
+            const pageUrl = encodeURIComponent(window.location.href);
 
-            questionElement.innerHTML = `
+            mainCard.innerHTML = `
                 <div class="flex flex-col items-center justify-center">
                     <p class="text-2xl font-bold mb-2">क्विज़ समाप्त!</p>
                     <p class="text-xl mb-4">आपका स्कोर ${questions.length} में से ${score} है।</p>
                     <p class="text-5xl font-bold my-4">${percentage}%</p>
                     <p class="text-2xl font-semibold ${remarkColor}">${remark}</p>
+                    <div class="flex space-x-4 my-6">
+                        <a href="https://api.whatsapp.com/send?text=${shareText}%20${pageUrl}" target="_blank" class="bg-green-500 text-white py-2 px-4 rounded-lg btn hover:bg-green-600">WhatsApp पर शेयर करें</a>
+                        <a href="https://twitter.com/intent/tweet?text=${shareText}&url=${pageUrl}" target="_blank" class="bg-blue-400 text-white py-2 px-4 rounded-lg btn hover:bg-blue-500">Twitter पर शेयर करें</a>
+                    </div>
+                    <div class="flex flex-col md:flex-row gap-4 mt-4 w-full">
+                         <button id="review-answers-btn" class="w-full md:w-auto flex-1 bg-gray-600 text-white font-semibold py-3 px-8 rounded-lg btn hover:bg-gray-700">उत्तरों की समीक्षा करें</button>
+                         <button id="restart-quiz-btn" class="w-full md:w-auto flex-1 bg-blue-600 text-white font-semibold py-3 px-8 rounded-lg btn hover:bg-blue-700">दोबारा खेलें</button>
+                    </div>
                 </div>
             `;
-            
-            nextButton.innerHTML = "दोबारा खेलें";
-            nextButton.style.display = "block";
+            document.getElementById('restart-quiz-btn').addEventListener('click', goHome);
+            document.getElementById('review-answers-btn').addEventListener('click', displayReview);
         }
 
+        function displayReview() {
+             mainCard.style.display = 'none';
+             reviewScreen.style.display = 'block';
+             reviewContent.innerHTML = ''; 
+
+             questions.forEach((question, index) => {
+                const userAnswer = userAnswers[index];
+                const correctAnswerObj = question.answers.find(ans => ans.correct);
+                const isCorrect = userAnswer === correctAnswerObj.text;
+                
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('p-4', 'rounded-lg', 'bg-gray-50');
+
+                let optionsHtml = '';
+                question.answers.forEach(option => {
+                    let classes = 'block p-2 my-1 rounded-md ';
+                    if(option.correct) {
+                        classes += 'bg-green-100 text-green-800 font-semibold';
+                    }
+                    if(option.text === userAnswer && !isCorrect){
+                         classes += 'bg-red-100 text-red-800';
+                    }
+                    optionsHtml += `<div class="${classes}">${option.text}</div>`;
+                });
+                
+                const resultClass = isCorrect ? 'user-correct' : 'user-incorrect';
+
+                questionDiv.innerHTML = `
+                    <p class="font-semibold text-lg mb-2">${index + 1}. ${question.question}</p>
+                    <div class="review-answer ${resultClass} pl-3">
+                        ${optionsHtml}
+                        <p class="mt-2 text-sm"><b>आपका उत्तर:</b> ${userAnswer || 'कोई उत्तर नहीं दिया'}</p>
+                    </div>
+                `;
+                reviewContent.appendChild(questionDiv);
+             });
+        }
+        
+        backToScoreBtn.addEventListener('click', () => {
+             mainCard.style.display = 'block';
+             reviewScreen.style.display = 'none';
+        });
 
         function updateProgressBar(){
             const progressPercentage = ((currentQuestionIndex + 1) / questions.length) * 100;
@@ -734,22 +613,12 @@
         }
 
         function goHome() {
-            clearInterval(timer);
-            quizTitle.innerText = 'क्विज़ पोर्टल';
-            quizContent.style.display = "none";
-            backButton.style.display = "none";
-            startScreen.style.display = "flex";
+            window.location.reload(); 
         }
 
-        nextButton.addEventListener('click', () => {
-            if (nextButton.innerHTML === "दोबारा खेलें") {
-                goHome();
-                setupCategories();
-            } else {
-                handleNextQuestion();
-            }
-        });
-        
+        // Event Listeners
+        nextButton.addEventListener('click', handleNextQuestion);
+        prevButton.addEventListener('click', handlePrevQuestion);
         backButton.addEventListener('click', goHome);
         
         // Initial setup
@@ -757,4 +626,3 @@
     </script>
 </body>
 </html>
-
